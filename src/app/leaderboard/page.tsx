@@ -25,10 +25,12 @@ export default function LeaderboardPage() {
   if (isLoading) return <div className="text-center text-nas-yellow mt-10 animate-pulse text-xl">Loading Leaderboard...</div>;
 
   return (
-    <main className="min-h-screen w-full">
+    <main className="min-h-screen w-full bg-black/35">
       <Header />
       <LeaderboardList>
-        {Array.isArray(data) && data.map((item) => (
+        {Array.isArray(data) && data
+          .filter((item) => item.status !== 'Eliminated')
+          .map((item) => (
           <LeaderboardItem key={item.id || item.name} item={item} />
         ))}
       </LeaderboardList>
