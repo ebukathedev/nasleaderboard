@@ -5,6 +5,7 @@ export interface VoteItem {
   image?: string;
   percentage?: string;
   rank?: number;
+  status?: 'Safe' | 'At Risk' | 'Eliminated';
 }
 
 export interface ApiResponse {

@@ -7,7 +7,13 @@ import LeaderboardList from '@/components/LeaderboardList';
 import LeaderboardItem from '@/components/LeaderboardItem';
 import { VoteItem } from '@/types';
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+  return res.json();
+};
 
 export default function LeaderboardPage() {
   const { data, error, isLoading } = useSWR<VoteItem[]>('/api/fetchVotes', fetcher, {
@@ -22,7 +28,7 @@ export default function LeaderboardPage() {
     <main className="min-h-screen w-full">
       <Header />
       <LeaderboardList>
-        {data && data.map((item) => (
+        {Array.isArray(data) && data.map((item) => (
           <LeaderboardItem key={item.id || item.name} item={item} />
         ))}
       </LeaderboardList>
