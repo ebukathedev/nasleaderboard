@@ -60,10 +60,9 @@ export default function Hero({ metadata }: HeroProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="text-gray-400 text-lg md:text-2xl max-w-2xl mb-10 font-medium"
+        className="text-gray-400 text-lg md:text-2xl max-w-2xl mb-10 font-medium text-pretty"
       >
-        <div className='text-pretty'>Real-time updates. See who is safe and who needs your help.</div>
-        
+        Real-time updates. See who is safe and who needs your help
       </motion.p>
 
       {/* Actions */}

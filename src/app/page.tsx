@@ -54,7 +54,7 @@ export default function Home() {
     <main className="min-h-screen bg-black/50 text-white selection:bg-nas-gold selection:text-black relative">
       <StickyStatus metadata={data?.metadata} />
       <Hero />
-      <TrendingTicker />
+      <TrendingTicker contestants={sortedContestants} endDate={data?.metadata?.endDate} />
       <Podium contestants={topThree} />
       <DangerZone contestants={sortedContestants} />
       <EliminatedSection contestants={sortedContestants} />
