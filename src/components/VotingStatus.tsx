@@ -1,17 +1,14 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { CampaignMetadata } from '@/types';
-import { Calendar, CheckCircle } from 'lucide-react';
+import { Clock, Calendar, AlertCircle, CheckCircle } from 'lucide-react';
 
-interface StickyStatusProps {
-  metadata?: CampaignMetadata;
+interface VotingStatusProps {
+  metadata: CampaignMetadata;
 }
 
 type VotingState = 'PRE-GAME' | 'LIVE' | 'POST-GAME';
 
-export default function StickyStatus({ metadata }: StickyStatusProps) {
+const VotingStatus: React.FC<VotingStatusProps> = ({ metadata }) => {
   const [status, setStatus] = useState<VotingState>('PRE-GAME');
   const [timeLeft, setTimeLeft] = useState<string>('00:00:00');
   const [isMounted, setIsMounted] = useState(false);
@@ -74,13 +71,16 @@ export default function StickyStatus({ metadata }: StickyStatusProps) {
 
   if (!isMounted || !metadata) return null;
 
+  // Render based on state
   if (status === 'PRE-GAME') {
     return (
-      <div className="sticky top-0 z-50 w-full bg-black border-b border-blue-500/30 py-2 px-4 flex items-center justify-center text-xs md:text-sm font-medium tracking-wider uppercase text-white shadow-lg">
-        <div className="flex items-center gap-2">
-          <Calendar className="w-4 h-4 text-blue-500" />
-          <span className="text-blue-500 font-bold">Voting Opens In:</span>
-          <span className="font-mono font-bold text-white">{timeLeft}</span>
+      <div className="inline-flex items-center gap-3 px-4 py-2 bg-blue-900/20 border border-blue-500/20 rounded-full backdrop-blur-sm mb-6 animate-fade-in">
+        <div className="flex items-center gap-2 text-blue-400 font-bold uppercase tracking-widest text-[10px] md:text-xs">
+          <Calendar className="w-3 h-3" />
+          Opens In:
+        </div>
+        <div className="font-mono font-bold text-white tracking-tight text-sm md:text-base">
+          {timeLeft}
         </div>
       </div>
     );
@@ -88,17 +88,16 @@ export default function StickyStatus({ metadata }: StickyStatusProps) {
 
   if (status === 'LIVE') {
     return (
-      <div className="sticky top-0 z-50 w-full bg-black border-b border-red-500/30 py-2 px-4 flex items-center justify-center text-xs md:text-sm font-medium tracking-wider uppercase text-white shadow-lg">
-        <div className="flex items-center gap-2">
-          <motion.div
-            animate={{ opacity: [1, 0.5, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"
-          />
-          <span className="text-red-500 font-bold drop-shadow-[0_0_5px_rgba(239,68,68,0.5)]">
-            Live Voting Closes In:
+      <div className="inline-flex items-center gap-3 px-4 py-2 bg-red-900/20 border border-red-500/20 rounded-full backdrop-blur-sm mb-6">
+        <div className="flex items-center gap-2 text-red-500 font-bold uppercase tracking-widest text-[10px] md:text-xs">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
           </span>
-          <span className="font-mono font-bold text-white">{timeLeft}</span>
+          Live:
+        </div>
+        <div className="font-mono font-bold text-white tracking-tight text-sm md:text-base">
+          {timeLeft}
         </div>
       </div>
     );
@@ -106,11 +105,13 @@ export default function StickyStatus({ metadata }: StickyStatusProps) {
 
   // POST-GAME
   return (
-    <div className="sticky top-0 z-50 w-full bg-black border-b border-nas-gold/30 py-2 px-4 flex items-center justify-center text-xs md:text-sm font-medium tracking-wider uppercase text-white shadow-lg">
-      <div className="flex items-center gap-2">
-        <CheckCircle className="w-4 h-4 text-nas-gold" />
-        <span className="font-bold text-nas-gold">Official Voting Closed - Final Results</span>
+    <div className="inline-flex items-center gap-2 px-4 py-2 bg-nas-gold/10 border border-nas-gold/20 rounded-full backdrop-blur-sm mb-6">
+      <CheckCircle className="w-3 h-3 text-nas-gold" />
+      <div className="font-bold text-nas-gold tracking-widest uppercase text-[10px] md:text-xs">
+        Voting Closed
       </div>
     </div>
   );
-}
+};
+
+export default VotingStatus;

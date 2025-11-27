@@ -18,6 +18,10 @@ const fetcher = async (url: string) => {
   return res.json();
 };
 
+import StickyStatus from '@/components/StickyStatus';
+
+// ... (imports)
+
 export default function Home() {
   const { data, error, isLoading } = useSWR('/api/fetchVotes', fetcher, {
     refreshInterval: 10000, // Auto-refresh every 10s
@@ -25,7 +29,7 @@ export default function Home() {
 
   // Handle new API response structure { status, contestants }
   const apiData = data?.contestants || [];
-  const isArchived = data?.status === 'ARCHIVED';
+  // isArchived logic is now handled inside StickyStatus via metadata
 
   // Transform API data to Contestant format
   const contestants: Contestant[] = Array.isArray(apiData) ? apiData.map((item: any) => ({
@@ -48,11 +52,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-black/50 text-white selection:bg-nas-gold selection:text-black relative">
-      {isArchived && (
-        <div className="bg-nas-gold text-black text-center p-2 font-bold uppercase tracking-widest sticky top-0 z-50 shadow-lg">
-          Official Voting Closed - Final Results
-        </div>
-      )}
+      <StickyStatus metadata={data?.metadata} />
       <Hero />
       <TrendingTicker />
       <Podium contestants={topThree} />

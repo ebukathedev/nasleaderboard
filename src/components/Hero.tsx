@@ -4,15 +4,19 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import nasLogo from '@/images/image.png';
+import VotingStatus from './VotingStatus';
+import { CampaignMetadata } from '@/types';
 
-export default function Hero() {
+interface HeroProps {
+  metadata?: CampaignMetadata;
+}
+
+export default function Hero({ metadata }: HeroProps) {
   return (
     <section className="relative w-full min-h-[80vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
       {/* Abstract Background */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/40 via-black to-black -z-10" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-900/20 rounded-full blur-[120px] -z-10 mix-blend-screen" />
-
-
 
       {/* NAS Logo */}
       <motion.div
@@ -30,21 +34,16 @@ export default function Hero() {
         />
       </motion.div>
 
-      {/* Live Badge */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 mb-8"
-      >
+      {/* Voting Status */}
+      {metadata && (
         <motion.div
-          animate={{ opacity: [1, 0.5, 1] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"
-        />
-        <span className="text-red-400 text-xs font-bold tracking-widest uppercase">
-          Live Voting Tracker
-        </span>
-      </motion.div>
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 w-full max-w-2xl"
+        >
+          <VotingStatus metadata={metadata} />
+        </motion.div>
+      )}
 
       {/* Headline */}
       <motion.h1 

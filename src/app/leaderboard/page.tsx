@@ -15,6 +15,10 @@ const fetcher = async (url: string) => {
   return res.json();
 };
 
+import StickyStatus from '@/components/StickyStatus';
+
+// ... (imports)
+
 export default function LeaderboardPage() {
   const { data, error, isLoading } = useSWR('/api/fetchVotes', fetcher, {
     refreshInterval: 15000, // Refresh every 15 seconds
@@ -22,18 +26,14 @@ export default function LeaderboardPage() {
   });
 
   const items = data?.contestants || [];
-  const isArchived = data?.status === 'ARCHIVED';
+  // isArchived logic is now handled inside StickyStatus via metadata
 
   if (error) return <div className="text-center text-red-500 mt-10">Failed to load leaderboard data.</div>;
   if (isLoading) return <div className="text-center text-nas-yellow mt-10 animate-pulse text-xl">Loading Leaderboard...</div>;
 
   return (
     <main className="min-h-screen w-full bg-black/35 relative">
-      {isArchived && (
-        <div className="bg-nas-gold text-black text-center py-2 font-bold uppercase tracking-widest sticky top-0 z-50 shadow-lg">
-          Official Voting Closed - Final Results
-        </div>
-      )}
+      <StickyStatus metadata={data?.metadata} />
       <Header />
       <LeaderboardList>
         {Array.isArray(items) && items

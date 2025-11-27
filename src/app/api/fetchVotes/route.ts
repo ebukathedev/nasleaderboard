@@ -56,17 +56,28 @@ export async function GET() {
     });
 
     let voteItems = [];
+    let metadata = null;
 
     if (res.ok) {
       const data = await res.json();
       const pollData = data[0]?.result?.data?.json;
       
       // Check if we have valid vote items
-      if (Array.isArray(pollData) && pollData.length > 0 && Array.isArray(pollData[0]?.VoteItem)) {
-        voteItems = pollData[0].VoteItem;
-        
-        // Save successful fetch to snapshot
-        saveSnapshot(voteItems);
+      if (Array.isArray(pollData) && pollData.length > 0) {
+        const activePoll = pollData[0];
+        if (Array.isArray(activePoll?.VoteItem)) {
+          voteItems = activePoll.VoteItem;
+          
+          metadata = {
+            title: activePoll.title,
+            startDate: activePoll.startDate,
+            endDate: activePoll.endDate,
+            isActive: activePoll.isActive
+          };
+
+          // Save successful fetch to snapshot
+          saveSnapshot({ metadata, contestants: voteItems });
+        }
       }
     }
 
@@ -74,13 +85,20 @@ export async function GET() {
     if (voteItems.length === 0) {
       console.log('Live data unavailable or empty. Loading snapshot...');
       const snapshotData = loadSnapshot();
-      if (snapshotData && Array.isArray(snapshotData)) {
-        voteItems = snapshotData;
+      // Check if snapshot is the new structure { metadata, contestants } or old array
+      if (snapshotData) {
+        if (Array.isArray(snapshotData)) {
+           // Old snapshot format (just array) - handle gracefully or ignore
+           voteItems = snapshotData;
+           // Metadata will be null, which is fine, frontend should handle it
+        } else if (snapshotData.contestants && Array.isArray(snapshotData.contestants)) {
+           // New snapshot format
+           voteItems = snapshotData.contestants;
+           metadata = snapshotData.metadata;
+        }
         apiStatus = 'ARCHIVED';
       } else {
         console.error('No snapshot available.');
-        // If no snapshot, we still return empty array (or maybe static data?)
-        // For now, let it fall through to static merge which handles 0 votes
       }
     }
 
@@ -155,6 +173,7 @@ export async function GET() {
 
     return NextResponse.json({
       status: apiStatus,
+      metadata,
       contestants: items
     });
   } catch (error) {

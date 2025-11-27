@@ -8,21 +8,15 @@ export interface VoteItem {
   status?: 'Safe' | 'At Risk' | 'Eliminated';
 }
 
+export interface CampaignMetadata {
+  title: string;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+}
+
 export interface ApiResponse {
   status?: 'LIVE' | 'ARCHIVED';
-  result: {
-    data: {
-      json: {
-        vote: {
-          getAll: Array<{
-            id: string;
-            name: string;
-            voteCount: number;
-            image: string;
-            // Add other fields if necessary based on actual API response
-          }>;
-        };
-      };
-    };
-  };
+  metadata?: CampaignMetadata;
+  contestants: VoteItem[];
 }
