@@ -48,6 +48,7 @@ export default function Home() {
       <TrendingTicker />
       <Podium contestants={topThree} />
       <DangerZone contestants={sortedContestants} />
+      <EliminatedSection contestants={sortedContestants} />
       <Footer />
     </main>
   );

@@ -79,9 +79,9 @@ export default function Hero() {
         >
           View Full Standings
         </Link>
-        <button className="px-8 py-4 bg-transparent border border-white/20 text-white font-bold text-lg rounded-full hover:bg-white/10 transition-all">
+        <Link href="https://nextafrobeatsstar.com/votes" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-transparent border border-white/20 text-white font-bold text-lg rounded-full hover:bg-white/10 transition-all">
           How Voting Works
-        </button>
+        </Link>
       </motion.div>
     </section>
   );

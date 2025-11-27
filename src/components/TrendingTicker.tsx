@@ -12,7 +12,7 @@ export default function TrendingTicker() {
   ];
 
   return (
-    <div className="w-full bg-nas-gold/10 border-y border-nas-gold/20 py-3 overflow-hidden">
+    <div className="w-full bg-nas-gold/10 border-y border-nas-gold/20 py-3 overflow-hidden my-10">
       <motion.div
         animate={{ x: [0, -1000] }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}

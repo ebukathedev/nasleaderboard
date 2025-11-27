@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Contestant, getVotePercentage } from '@/utils/mockData';
 import Image from 'next/image';
 import { AlertTriangle } from 'lucide-react';
+import Link from 'next/link';
 
 interface DangerZoneProps {
   contestants: Contestant[];
@@ -57,9 +58,9 @@ export default function DangerZone({ contestants }: DangerZoneProps) {
               </div>
 
               {/* Vote Button */}
-              <button className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-sm font-bold rounded-lg transition-colors shadow-lg shadow-orange-900/20">
+              <Link href={"https://nextafrobeatsstar.com/votes"} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-sm font-bold rounded-lg transition-colors shadow-lg shadow-orange-900/20">
                 VOTE
-              </button>
+              </Link>
             </div>
           </motion.div>
         ))}
