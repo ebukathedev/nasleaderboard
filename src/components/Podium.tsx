@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Contestant, getVotePercentage } from '@/utils/mockData';
+import { Contestant } from '@/utils/mockData';
 import Image from 'next/image';
 
 interface PodiumProps {

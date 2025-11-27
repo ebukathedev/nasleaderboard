@@ -51,7 +51,7 @@ export default function Hero() {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.1 }}
-        className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400 max-w-5xl"
+        className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400 max-w-5xl text-pretty"
       >
         Don&apos;t Let Your Favorite Go Home.
       </motion.h1>
@@ -63,7 +63,8 @@ export default function Hero() {
         transition={{ delay: 0.2 }}
         className="text-gray-400 text-lg md:text-2xl max-w-2xl mb-10 font-medium"
       >
-        Real-time updates. See who is safe and who needs your help.
+        <div className='text-pretty'>Real-time updates. See who is safe and who needs your help.</div>
+        
       </motion.p>
 
       {/* Actions */}
