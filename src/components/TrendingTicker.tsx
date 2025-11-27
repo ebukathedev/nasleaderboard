@@ -21,11 +21,11 @@ export default function TrendingTicker({ contestants, endDate }: TrendingTickerP
     leader ? `🏆 Current Leader: ${leader.name}` : "🏆 Race is heating up!",
     "⚡ Live Data: Updates automatically",
     `📅 Voting Ends: ${formattedEndDate}`,
-    "🌍 Official NAS Voting Tracker"
+    // "🌍 Official NAS Voting Tracker"
   ] : [
     "🚀 Voting Opening Soon",
     "🔥 Get ready to support your favorite!",
-    "🌍 Official NAS Voting Tracker"
+    // "🌍 Official NAS Voting Tracker"
   ];
 
   return (

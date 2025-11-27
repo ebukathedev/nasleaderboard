@@ -19,6 +19,7 @@ const fetcher = async (url: string) => {
 };
 
 import StickyStatus from '@/components/StickyStatus';
+import MusicLoader from '@/components/MusicLoader';
 
 // ... (imports)
 
@@ -48,7 +49,11 @@ export default function Home() {
   const topThree = sortedContestants.slice(0, 3);
 
   if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">Failed to load data</div>;
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
+  if (isLoading) return (
+    <div className="min-h-screen flex items-center justify-center bg-black">
+      <MusicLoader size="large" />
+    </div>
+  );
 
   return (
     <main className="min-h-screen bg-black/50 text-white selection:bg-nas-gold selection:text-black relative">

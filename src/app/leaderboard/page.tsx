@@ -16,6 +16,7 @@ const fetcher = async (url: string) => {
 };
 
 import StickyStatus from '@/components/StickyStatus';
+import MusicLoader from '@/components/MusicLoader';
 
 // ... (imports)
 
@@ -29,7 +30,11 @@ export default function LeaderboardPage() {
   // isArchived logic is now handled inside StickyStatus via metadata
 
   if (error) return <div className="text-center text-red-500 mt-10">Failed to load leaderboard data.</div>;
-  if (isLoading) return <div className="text-center text-nas-yellow mt-10 animate-pulse text-xl">Loading Leaderboard...</div>;
+  if (isLoading) return (
+    <div className="min-h-screen flex items-center justify-center bg-black/35">
+      <MusicLoader size="large" />
+    </div>
+  );
 
   return (
     <main className="min-h-screen w-full bg-black/35 relative">
