@@ -52,7 +52,7 @@ export default function Hero({ metadata }: HeroProps) {
         transition={{ delay: 0.1 }}
         className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400 max-w-5xl text-pretty"
       >
-        Don&apos;t Let Your Favorite Go Home.
+        Don&apos;t Let Your Favorite Artiste Go Home.
       </motion.h1>
 
       {/* Subtext */}
