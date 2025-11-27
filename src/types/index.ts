@@ -9,6 +9,7 @@ export interface VoteItem {
 }
 
 export interface ApiResponse {
+  status?: 'LIVE' | 'ARCHIVED';
   result: {
     data: {
       json: {

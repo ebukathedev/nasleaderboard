@@ -23,8 +23,12 @@ export default function Home() {
     refreshInterval: 10000, // Auto-refresh every 10s
   });
 
+  // Handle new API response structure { status, contestants }
+  const apiData = data?.contestants || [];
+  const isArchived = data?.status === 'ARCHIVED';
+
   // Transform API data to Contestant format
-  const contestants: Contestant[] = Array.isArray(data) ? data.map((item: any) => ({
+  const contestants: Contestant[] = Array.isArray(apiData) ? apiData.map((item: any) => ({
     id: item.id,
     name: item.name,
     votes: item.voteCount,
@@ -43,7 +47,12 @@ export default function Home() {
   if (isLoading) return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
 
   return (
-    <main className="min-h-screen bg-black/50 text-white selection:bg-nas-gold selection:text-black">
+    <main className="min-h-screen bg-black/50 text-white selection:bg-nas-gold selection:text-black relative">
+      {isArchived && (
+        <div className="bg-nas-gold text-black text-center p-2 font-bold uppercase tracking-widest sticky top-0 z-50 shadow-lg">
+          Official Voting Closed - Final Results
+        </div>
+      )}
       <Hero />
       <TrendingTicker />
       <Podium contestants={topThree} />
