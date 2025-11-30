@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next"
 
 const nasMain = localFont({
 	src: [
@@ -28,6 +29,7 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={` ${nasMain.variable} antialiased`}>
 				{children}
+				<Analytics />
 			</body>
 		</html>
 	);
