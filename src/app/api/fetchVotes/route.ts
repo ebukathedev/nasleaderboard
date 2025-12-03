@@ -1,19 +1,12 @@
 import { NextResponse } from 'next/server';
 import { VoteItem } from '@/types';
-import fs from 'fs';
-import path from 'path';
+import { redis } from '@/lib/redis';
 import { allContestants } from '@/utils/allContestants';
 
-const SNAPSHOT_FILE = path.join(process.cwd(), 'src', 'data', 'vote_snapshot.json');
-
 // Helper to save snapshot
-const saveSnapshot = (data: any) => {
+const saveSnapshot = async (data: any) => {
   try {
-    const dir = path.dirname(SNAPSHOT_FILE);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(SNAPSHOT_FILE, JSON.stringify(data, null, 2));
+    await redis.set('vote_snapshot', JSON.stringify(data));
     console.log('Snapshot saved successfully.');
   } catch (error) {
     console.error('Failed to save snapshot:', error);
@@ -21,12 +14,10 @@ const saveSnapshot = (data: any) => {
 };
 
 // Helper to load snapshot
-const loadSnapshot = () => {
+const loadSnapshot = async () => {
   try {
-    if (fs.existsSync(SNAPSHOT_FILE)) {
-      const data = fs.readFileSync(SNAPSHOT_FILE, 'utf-8');
-      return JSON.parse(data);
-    }
+    const data = await redis.get('vote_snapshot');
+    return data ? JSON.parse(data) : null;
   } catch (error) {
     console.error('Failed to load snapshot:', error);
   }
@@ -76,7 +67,7 @@ export async function GET() {
           };
 
           // Save successful fetch to snapshot
-          saveSnapshot({ metadata, contestants: voteItems });
+          await saveSnapshot({ metadata, contestants: voteItems });
         }
       }
     }
@@ -84,7 +75,7 @@ export async function GET() {
     // If no live data (fetch failed or empty), try loading snapshot
     if (voteItems.length === 0) {
       console.log('Live data unavailable or empty. Loading snapshot...');
-      const snapshotData = loadSnapshot();
+      const snapshotData = await loadSnapshot();
       // Check if snapshot is the new structure { metadata, contestants } or old array
       if (snapshotData) {
         if (Array.isArray(snapshotData)) {
@@ -179,7 +170,7 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching votes:', error);
     // Try snapshot on error too
-    const snapshotData = loadSnapshot();
+    const snapshotData = await loadSnapshot();
     if (snapshotData && Array.isArray(snapshotData)) {
        // Logic to process snapshot data would be duplicated here. 
        // Ideally refactor processing into a function, but for now let's just return error
