@@ -18,10 +18,6 @@ const Header = () => {
         Leaderboard
       </h1>
 
-      	{/* h1 className="text-4xl md:text-6xl font-black text-nas-yellow tracking-widest uppercase drop-shadow-lg">
-				Leaderboard
-			</h1>< */}
-
       <div className="w-24 hidden md:block" /> {/* Spacer for centering */}
     </header>
   );
