@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { redis } from '@/lib/redis';
 
 // Types for the data structures
 interface WebContestant {
@@ -23,6 +24,27 @@ interface HybridStats {
   rankGap: number; // webRank - appRank
 }
 
+// Helper to save snapshot
+const saveSnapshot = async (data: any) => {
+  try {
+    await redis.set('hybrid_stats_snapshot', JSON.stringify(data));
+    console.log('Hybrid stats snapshot saved successfully.');
+  } catch (error) {
+    console.error('Failed to save hybrid stats snapshot:', error);
+  }
+};
+
+// Helper to load snapshot
+const loadSnapshot = async () => {
+  try {
+    const data = await redis.get('hybrid_stats_snapshot');
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    console.error('Failed to load hybrid stats snapshot:', error);
+  }
+  return null;
+};
+
 export async function GET() {
   try {
     // 1. Fetch Web Data (Official Counts)
@@ -30,8 +52,6 @@ export async function GET() {
     const webRes = await fetch(webUrl, { next: { revalidate: 60 } }); // Cache for 60s
     const webJson = await webRes.json();
 
-    // Extract relevant data from TRPC response
-    // The response is a batch, index 0 is usually vote.getAll
     // Extract relevant data from TRPC response
     // The response is a batch, index 0 is usually vote.getAll
     const webPolls = webJson[0]?.result?.data?.json || [];
@@ -96,6 +116,11 @@ export async function GET() {
     // Sort by Web Rank by default for the API response
     mergedStats.sort((a, b) => a.webRank - b.webRank);
 
+    // Save to Redis
+    if (mergedStats.length > 0) {
+      await saveSnapshot(mergedStats);
+    }
+
     return NextResponse.json({
       timestamp: new Date().toISOString(),
       data: mergedStats
@@ -103,6 +128,19 @@ export async function GET() {
 
   } catch (error) {
     console.error('Error fetching hybrid stats:', error);
+    
+    // Try loading from snapshot
+    console.log('Attempting to load hybrid stats from snapshot...');
+    const snapshotData = await loadSnapshot();
+    
+    if (snapshotData) {
+      return NextResponse.json({
+        timestamp: new Date().toISOString(), // Or maybe add a snapshot timestamp?
+        data: snapshotData,
+        source: 'snapshot'
+      });
+    }
+
     return NextResponse.json({ error: 'Failed to fetch hybrid stats' }, { status: 500 });
   }
 }
