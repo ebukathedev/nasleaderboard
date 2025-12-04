@@ -40,6 +40,22 @@ export default function LeaderboardPage() {
     <main className="min-h-screen w-full bg-black/35 relative">
       <StickyStatus metadata={data?.metadata} />
       <Header />
+      
+      <div className="flex justify-center mb-8 px-4">
+        <a 
+          href="/analysis"
+          className="group relative inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 hover:border-nas-gold/30 transition-all duration-300"
+        >
+          <span className="w-2 h-2 rounded-full bg-nas-gold animate-pulse" />
+          <span className="text-gray-300 font-medium group-hover:text-white transition-colors">
+            View Web vs App Analysis
+          </span>
+          <svg className="w-4 h-4 text-gray-500 group-hover:text-nas-gold transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
       <LeaderboardList>
         {Array.isArray(items) && items
           .filter((item: VoteItem) => item.status !== 'Eliminated')
@@ -47,6 +63,9 @@ export default function LeaderboardPage() {
           <LeaderboardItem key={item.id || item.name} item={item} />
         ))}
       </LeaderboardList>
+      <div className="text-center py-4 text-xs text-gray-500 bg-black/80">
+        Votes displayed are from the <span className="text-gray-400">nextafrobeatsstar</span> website only, excluding app votes.
+      </div>
     </main>
   );
 }

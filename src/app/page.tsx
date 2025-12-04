@@ -64,6 +64,9 @@ export default function Home() {
       <DangerZone contestants={sortedContestants} />
       <EliminatedSection contestants={sortedContestants} />
       <Footer />
+      <div className="text-center py-4 text-xs text-gray-500 bg-black/80">
+        Votes displayed are from the <span className="text-gray-400">nextafrobeatsstar</span> website only, excluding app votes.
+      </div>
     </main>
   );
 }
