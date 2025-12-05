@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import Link from 'next/link';
 import { ChevronLeft, Smartphone, Globe, AlertCircle, Minus } from 'lucide-react';
 import MusicLoader from '@/components/MusicLoader';
+import StickyStatus from '@/components/StickyStatus';
 
 interface HybridStats {
   name: string;
@@ -18,6 +19,11 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export default function AnalysisPage() {
   const { data, error, isLoading } = useSWR('/api/hybrid-stats', fetcher, {
     refreshInterval: 10000, // Refresh every 10s
+  });
+
+  const { data: liveData } = useSWR('/api/fetchVotes', fetcher, {
+    refreshInterval: 15000, // Refresh every 15 seconds
+    revalidateOnFocus: false,
   });
 
   if (error) return (
@@ -35,10 +41,12 @@ export default function AnalysisPage() {
     </div>
   );
 
-  const stats: HybridStats[] = data?.data || [];
+  const stats: HybridStats[] = Array.isArray(data?.data) ? data.data : [];
 
   return (
-    <div className="min-h-screen bg-black/35 text-white p-6 md:p-12 font-sans relative">
+    <>
+      <StickyStatus metadata={liveData?.metadata} />
+      <div className="min-h-screen bg-black/35 text-white p-6 md:p-12 font-sans relative">
       {/* Background Texture (Optional, matching LeaderboardItem feel) */}
       <div className="fixed inset-0 bg-[url('/noise.png')] opacity-10 pointer-events-none mix-blend-overlay" />
 
@@ -152,5 +160,6 @@ export default function AnalysisPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -117,16 +117,26 @@ export async function GET() {
       }
     }
 
-    // Sort by Web Rank by default for the API response
-    mergedStats.sort((a, b) => a.webRank - b.webRank);
+    // Extract metadata
+    let metadata = null;
+    if (Array.isArray(webPolls) && webPolls.length > 0) {
+      const activePoll = webPolls[0];
+      metadata = {
+        title: activePoll.title,
+        startDate: activePoll.startDate,
+        endDate: activePoll.endDate,
+        isActive: activePoll.isActive
+      };
+    }
 
     // Save to Redis
     if (mergedStats.length > 0) {
-      await saveSnapshot(mergedStats);
+      await saveSnapshot({ metadata, data: mergedStats });
     }
 
     return NextResponse.json({
       timestamp: new Date().toISOString(),
+      metadata,
       data: mergedStats
     });
 
@@ -138,9 +148,14 @@ export async function GET() {
     const snapshotData = await loadSnapshot();
     
     if (snapshotData) {
+      // Handle both old (array) and new ({ metadata, data }) snapshot formats
+      const data = Array.isArray(snapshotData) ? snapshotData : (snapshotData.data || []);
+      const metadata = Array.isArray(snapshotData) ? null : snapshotData.metadata;
+
       return NextResponse.json({
-        timestamp: new Date().toISOString(), // Or maybe add a snapshot timestamp?
-        data: snapshotData,
+        timestamp: new Date().toISOString(),
+        metadata,
+        data,
         source: 'snapshot'
       });
     }
