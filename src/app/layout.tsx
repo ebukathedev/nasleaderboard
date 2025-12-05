@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={` ${nasMain.variable} antialiased`}>
+			<body className={` ${nasMain.variable} antialiased`} suppressContentEditableWarning>
 				{children}
 				<Analytics />
 			</body>

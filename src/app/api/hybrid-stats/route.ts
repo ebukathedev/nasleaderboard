@@ -69,6 +69,10 @@ export async function GET() {
         webRank: index + 1,
       }));
 
+    if (webContestants.length === 0) {
+      throw new Error('No web contestants found (External API returned empty). Triggering fallback.');
+    }
+
     // 2. Fetch App Data (The Hidden Order)
     const appUrl = 'https://backend.choicely.com/contests/Y2hvaWNlbHktZXUvY29udGVzdHMvT2VFRW1FS2c0a3NlYmRuN0JDNmc/participants';
     const appRes = await fetch(appUrl, { next: { revalidate: 60 } });
